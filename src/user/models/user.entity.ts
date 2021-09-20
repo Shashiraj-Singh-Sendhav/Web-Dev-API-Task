@@ -1,7 +1,6 @@
-import { timestamp } from 'rxjs';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
