@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../models/signup.dto';
@@ -21,6 +22,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiBody({ type: CreateUserDto })
+  @ApiCreatedResponse({ description: 'Create user' })
   @UsePipes(new ValidationPipe({ transform: true }))
   async create(@Body() user: CreateUserDto): Promise<any> {
     try {
@@ -35,6 +38,7 @@ export class UserController {
   }
 
   @Get()
+  @ApiCreatedResponse({ description: 'Get all users' })
   findAll(): Promise<any[]> {
     try {
       return this.userService.findAllUser();
@@ -45,6 +49,8 @@ export class UserController {
   }
 
   @Put(':id')
+  @ApiBody({ type: CreateUserDto })
+  @ApiCreatedResponse({ description: 'Update user' })
   async update(
     @Param('id') id: number,
     @Body() user: CreateUserDto,
@@ -61,6 +67,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @ApiCreatedResponse({ description: 'Delete user' })
   async delete(@Param('id') id: number): Promise<Observable<DeleteResult>> {
     try {
       let query = { id: id };
