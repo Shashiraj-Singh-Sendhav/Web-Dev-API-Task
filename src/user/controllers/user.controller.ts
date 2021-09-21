@@ -1,8 +1,10 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,25 +22,54 @@ export class UserController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  create(@Body() user: CreateUserDto): Promise<any> {
-    return this.userService.create(user);
+  async create(@Body() user: CreateUserDto): Promise<any> {
+    try {
+      let query = { email: user.email };
+      const userData = await this.userService.findUser(query);
+      if (userData) throw new ConflictException('User already registered.');
+      return this.userService.create(user);
+    } catch (error) {
+      console.log('Something went wrong in signup. ', error);
+      return error;
+    }
   }
 
   @Get()
   findAll(): Promise<any[]> {
-    return this.userService.findAllUser();
+    try {
+      return this.userService.findAllUser();
+    } catch (error) {
+      console.log('Something went wrong with find user api. ', error);
+      return error;
+    }
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: number,
     @Body() user: CreateUserDto,
-  ): Observable<UpdateResult> {
-    return this.userService.updateUser(id, user);
+  ): Promise<Observable<UpdateResult>> {
+    try {
+      let query = { id: id };
+      const userData = await this.userService.findUser(query);
+      if (!userData) throw new NotFoundException('User not found.');
+      return this.userService.updateUser(id, user);
+    } catch (error) {
+      console.log('Something went wrong in update user api. ', error);
+      return error;
+    }
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number): Observable<DeleteResult> {
-    return this.userService.deleteUser(id);
+  async delete(@Param('id') id: number): Promise<Observable<DeleteResult>> {
+    try {
+      let query = { id: id };
+      const userData = await this.userService.findUser(query);
+      if (!userData) throw new NotFoundException('User not found.');
+      return this.userService.deleteUser(id);
+    } catch (error) {
+      console.log('Something went wrong in delete user api. ', error);
+      return error;
+    }
   }
 }

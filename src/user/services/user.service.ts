@@ -20,6 +20,10 @@ export class UserService {
     return this.userRepository.find();
   }
 
+  findUser(userData): Promise<object> {
+    return this.userRepository.findOne(userData);
+  }
+
   updateUser(id: number, user: CreateUserDto): Observable<UpdateResult> {
     return from(this.userRepository.update(id, user));
   }
