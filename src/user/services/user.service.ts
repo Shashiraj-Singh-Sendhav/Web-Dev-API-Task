@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, Observable } from 'rxjs';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { CreateUserDto } from '../models/signup.dto';
 import { UserEntity } from '../models/user.entity';
-import { UserData } from '../models/user.interface';
 
 @Injectable()
 export class UserService {
@@ -12,15 +12,15 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  create(user: UserData): Observable<UserData> {
-    return from(this.userRepository.save(user));
+  create(user: CreateUserDto): Promise<any> {
+    return this.userRepository.save(user);
   }
 
-  findAllUser(): Observable<UserData[]> {
-    return from(this.userRepository.find());
+  findAllUser(): Promise<any[]> {
+    return this.userRepository.find();
   }
 
-  updateUser(id: number, user: UserData): Observable<UpdateResult> {
+  updateUser(id: number, user: CreateUserDto): Observable<UpdateResult> {
     return from(this.userRepository.update(id, user));
   }
 
