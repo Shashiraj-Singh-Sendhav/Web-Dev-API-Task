@@ -1,18 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, Observable } from 'rxjs';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../models/signup.dto';
 import { UserEntity } from '../models/user.entity';
-
+import { AuthService } from 'src/auth/services/auth.service';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => AuthService))
+    private AuthService: AuthService,
   ) {}
 
-  create(user: CreateUserDto): Promise<any> {
+  async create(user: CreateUserDto): Promise<any> {
+    const { password } = user;
+    const hashedPassword = await this.AuthService.hashPassword(password);
+    user.password = hashedPassword;
     return this.userRepository.save(user);
   }
 
@@ -30,5 +35,9 @@ export class UserService {
 
   deleteUser(id: number): Observable<DeleteResult> {
     return from(this.userRepository.delete(id));
+  }
+
+  findOneUser(email: any): Promise<any> {
+    return this.userRepository.findOne(email);
   }
 }

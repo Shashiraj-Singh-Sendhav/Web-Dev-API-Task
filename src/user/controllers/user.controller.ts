@@ -30,6 +30,7 @@ export class UserController {
       let query = { email: user.email };
       const userData = await this.userService.findUser(query);
       if (userData) throw new ConflictException('User already registered.');
+      const userdetail = await this.userService.create(user);
       return this.userService.create(user);
     } catch (error) {
       console.log('Something went wrong in signup. ', error);

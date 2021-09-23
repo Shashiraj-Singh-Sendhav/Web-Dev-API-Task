@@ -8,11 +8,15 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @Length(2, 12)
+  password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @Length(2, 15)
   given_name: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  @Length(2, 12)
+  @Length(2, 15)
   family_name: string;
 }
