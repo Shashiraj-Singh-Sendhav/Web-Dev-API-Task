@@ -9,18 +9,21 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { LoginUserDto } from 'src/user/models/login.dto';
 import { CreateUserDto } from 'src/user/models/signup.dto';
 import { UserService } from 'src/user/services/user.service';
 import { JwtGuard } from '../guard/jwt.guard';
 import { AuthService } from '../services/auth.service';
+import Payload from '../models/payload.interface';
 
 @Controller()
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   @Post('signup')
@@ -57,7 +60,16 @@ export class AuthController {
       );
       console.log('isPassword', password, hashedPassword, isPassword);
       if (!isPassword) throw new BadRequestException('Incorrect Password.');
-      return 'token';
+
+      const payload: Payload = {
+        email: userData.email,
+        given_name: userData.given_name,
+        family_name: userData.family_name,
+      };
+
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
     } catch (error) {
       console.log('Something went wrong in login user api. ', error);
       return error;

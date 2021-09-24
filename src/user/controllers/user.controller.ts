@@ -6,9 +6,11 @@ import {
   NotFoundException,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { AuthService } from 'src/auth/services/auth.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../models/signup.dto';
@@ -21,6 +23,7 @@ export class UserController {
     private authService: AuthService,
   ) {}
 
+  @UseGuards(JwtGuard)
   @Get()
   @ApiCreatedResponse({ description: 'Get all users' })
   findAll(): Promise<any[]> {
@@ -32,6 +35,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Put(':id')
   @ApiBody({ type: CreateUserDto })
   @ApiCreatedResponse({ description: 'Update user' })
@@ -50,6 +54,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
   @ApiCreatedResponse({ description: 'Delete user' })
   async delete(@Param('id') id: number): Promise<Observable<DeleteResult>> {
