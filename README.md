@@ -4,7 +4,7 @@
 
 
 ## Description
-In this application we can access api's which can CREATE,READ,UPDATE,DELETE user. Swagger is also integrated by which we can access api's.
+In this application we can access api's which can CREATE,READ,UPDATE,DELETE user.
 
 (https://github.com/Shashiraj-Singh-Sendhav/Web-Dev-API-Task) repository.
 
@@ -47,9 +47,9 @@ JWT_SECRET=jwtsecret
 
 ## Now server will start and you can make api request on - http://localhost:3000 
 
-## Swagger Detail
+## Postman Collection Detail
 ```bash
-Access url for Swagger - http://localhost:3000/api
+Access url for Postman Collection - https://www.getpostman.com/collections/e195e00b04f4fcc3a9fe
 ```
 
 ## Stay in touch
