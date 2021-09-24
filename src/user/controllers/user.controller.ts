@@ -1,42 +1,29 @@
 import {
   Body,
-  ConflictException,
   Controller,
   Delete,
   Get,
   NotFoundException,
   Param,
-  Post,
   Put,
-  UsePipes,
-  ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { AuthService } from 'src/auth/services/auth.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../models/signup.dto';
 import { UserService } from '../services/user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private authService: AuthService,
+  ) {}
 
-  @Post()
-  @ApiBody({ type: CreateUserDto })
-  @ApiCreatedResponse({ description: 'Create user' })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Body() user: CreateUserDto): Promise<any> {
-    try {
-      let query = { email: user.email };
-      const userData = await this.userService.findUser(query);
-      if (userData) throw new ConflictException('User already registered.');
-      return this.userService.create(user);
-    } catch (error) {
-      console.log('Something went wrong in signup. ', error);
-      return error;
-    }
-  }
-
+  @UseGuards(JwtGuard)
   @Get()
   @ApiCreatedResponse({ description: 'Get all users' })
   findAll(): Promise<any[]> {
@@ -48,6 +35,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Put(':id')
   @ApiBody({ type: CreateUserDto })
   @ApiCreatedResponse({ description: 'Update user' })
@@ -59,6 +47,8 @@ export class UserController {
       let query = { id: id };
       const userData = await this.userService.findUser(query);
       if (!userData) throw new NotFoundException('User not found.');
+      const hashedPassword = await this.authService.hashPassword(user.password);
+      user.password = hashedPassword;
       return this.userService.updateUser(id, user);
     } catch (error) {
       console.log('Something went wrong in update user api. ', error);
@@ -66,6 +56,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
   @ApiCreatedResponse({ description: 'Delete user' })
   async delete(@Param('id') id: number): Promise<Observable<DeleteResult>> {
