@@ -4,7 +4,7 @@
 
 
 ## Description
-In this application we can access api's which can CREATE,LOGIN,READ,UPDATE,DELETE user.For Authentication JWT is used.Postman Collection link is provided below.
+In this application we can access api's which can CREATE,LOGIN,READ,UPDATE,DELETE user.For Authentication JWT is used.Swagger is also implemented.Postman Collection link is provided below.
 
 (https://github.com/Shashiraj-Singh-Sendhav/Web-Dev-API-Task) repository.
 
@@ -46,6 +46,11 @@ JWT_SECRET=jwtsecret
 ```
 
 ## Now server will start and you can make api request on - http://localhost:3000 
+
+## Swagger Detail
+```bash
+Access url for Swagger - http://localhost:3000/api
+```
 
 ## Postman Collection Detail
 ```bash
