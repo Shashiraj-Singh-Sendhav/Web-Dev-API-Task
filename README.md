@@ -4,7 +4,7 @@
 
 
 ## Description
-In this application we can access api's which can CREATE,READ,UPDATE,DELETE user.
+In this application we can access api's which can CREATE,LOGIN,READ,UPDATE,DELETE user.For Authentication JWT is used.Postman Collection link is provided below.
 
 (https://github.com/Shashiraj-Singh-Sendhav/Web-Dev-API-Task) repository.
 
