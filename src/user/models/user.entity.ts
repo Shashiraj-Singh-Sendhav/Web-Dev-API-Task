@@ -9,7 +9,7 @@ export class UserEntity {
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ select: false })
   password: string;
 
   @Column({ type: 'varchar' })

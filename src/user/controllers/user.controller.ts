@@ -1,42 +1,25 @@
 import {
   Body,
-  ConflictException,
   Controller,
   Delete,
   Get,
   NotFoundException,
   Param,
-  Post,
   Put,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/auth/services/auth.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../models/signup.dto';
 import { UserService } from '../services/user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @ApiBody({ type: CreateUserDto })
-  @ApiCreatedResponse({ description: 'Create user' })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Body() user: CreateUserDto): Promise<any> {
-    try {
-      let query = { email: user.email };
-      const userData = await this.userService.findUser(query);
-      if (userData) throw new ConflictException('User already registered.');
-      const userdetail = await this.userService.create(user);
-      return this.userService.create(user);
-    } catch (error) {
-      console.log('Something went wrong in signup. ', error);
-      return error;
-    }
-  }
+  constructor(
+    private readonly userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @Get()
   @ApiCreatedResponse({ description: 'Get all users' })

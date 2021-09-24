@@ -25,8 +25,10 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findUser(userData): Promise<object> {
-    return this.userRepository.findOne(userData);
+  findUser(query: object): Promise<any> {
+    return this.userRepository.findOne(query, {
+      select: ['id', 'email', 'password', 'given_name', 'family_name'],
+    });
   }
 
   updateUser(id: number, user: CreateUserDto): Observable<UpdateResult> {
@@ -35,9 +37,5 @@ export class UserService {
 
   deleteUser(id: number): Observable<DeleteResult> {
     return from(this.userRepository.delete(id));
-  }
-
-  findOneUser(email: any): Promise<any> {
-    return this.userRepository.findOne(email);
   }
 }
