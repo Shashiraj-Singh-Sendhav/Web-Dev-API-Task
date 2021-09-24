@@ -31,7 +31,7 @@ export class UserService {
     });
   }
 
-  updateUser(id: number, user: CreateUserDto): Observable<UpdateResult> {
+  updateUser(id: number, user: any): Observable<UpdateResult> {
     return from(this.userRepository.update(id, user));
   }
 

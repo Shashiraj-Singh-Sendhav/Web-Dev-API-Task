@@ -47,6 +47,8 @@ export class UserController {
       let query = { id: id };
       const userData = await this.userService.findUser(query);
       if (!userData) throw new NotFoundException('User not found.');
+      const hashedPassword = await this.authService.hashPassword(user.password);
+      user.password = hashedPassword;
       return this.userService.updateUser(id, user);
     } catch (error) {
       console.log('Something went wrong in update user api. ', error);
