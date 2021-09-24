@@ -13,6 +13,17 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .setTitle('NestJS CRUD Task')
     .setDescription('Test task of CRUD operation using NestJS and PostgreSQL.')
     .setVersion('1.0')
