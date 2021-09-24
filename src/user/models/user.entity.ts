@@ -1,3 +1,4 @@
+import { isHash } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('test')
@@ -7,6 +8,9 @@ export class UserEntity {
 
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
+
+  @Column({ select: false })
+  password: string;
 
   @Column({ type: 'varchar' })
   given_name: string;
