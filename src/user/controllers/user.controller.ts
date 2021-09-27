@@ -14,6 +14,7 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { AuthService } from 'src/auth/services/auth.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../models/signup.dto';
+import { UpdateUserDto } from '../models/updateUser.dto';
 import { UserService } from '../services/user.service';
 
 @ApiBearerAuth('JWT-auth')
@@ -38,18 +39,16 @@ export class UserController {
 
   @UseGuards(JwtGuard)
   @Put(':id')
-  @ApiBody({ type: CreateUserDto })
+  @ApiBody({ type: UpdateUserDto })
   @ApiCreatedResponse({ description: 'Update user' })
   async update(
     @Param('id') id: number,
-    @Body() user: CreateUserDto,
+    @Body() user: UpdateResult,
   ): Promise<Observable<UpdateResult>> {
     try {
       let query = { id: id };
       const userData = await this.userService.findUser(query);
       if (!userData) throw new NotFoundException('User not found.');
-      const hashedPassword = await this.authService.hashPassword(user.password);
-      user.password = hashedPassword;
       return this.userService.updateUser(id, user);
     } catch (error) {
       console.log('Something went wrong in update user api. ', error);
